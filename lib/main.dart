@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:netflix_clone/core/colors/colors.dart';
 import 'package:netflix_clone/presentation/main_page/screen_main_page.dart';
 
 void main() {
+  /////status bar
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   const SystemUiOverlayStyle(
+  //     statusBarColor: Colors.transparent,
+  //     systemNavigationBarColor: Colors.transparent,
+  //     statusBarIconBrightness:
+  //         Brightness.light, // Adjust this based on your app's theme
+  //   ),
+  // );
   runApp(const MyApp());
 }
 
@@ -14,15 +24,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          backgroundColor: Colors.black,
-          scaffoldBackgroundColor: backgroundColor,
-          fontFamily:GoogleFonts.montserrat().fontFamily,
-          textTheme: TextTheme(
-              bodyText1: TextStyle(color: Colors.white),
-              bodyText2: TextStyle(color: Colors.white))),
+        appBarTheme:const AppBarTheme(backgroundColor: Colors.transparent),
+        brightness: Brightness.dark,
+        primaryColor: Colors.red,
+        scaffoldBackgroundColor: backgroundColor,
+        fontFamily: GoogleFonts.montserrat().fontFamily,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+        ),
+      ),
       home: ScreenMainPage(),
     );
   }
