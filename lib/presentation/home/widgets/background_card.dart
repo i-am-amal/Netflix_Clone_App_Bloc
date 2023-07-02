@@ -41,6 +41,7 @@ class BackgroundCard extends StatelessWidget {
       ],
     );
   }
+
   TextButton _playButton() {
     return TextButton.icon(
       onPressed: () {},

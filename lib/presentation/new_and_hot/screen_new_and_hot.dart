@@ -4,7 +4,6 @@ import 'package:netflix_clone/core/constants.dart';
 import 'package:netflix_clone/presentation/new_and_hot/widgets/coming_soon_widget.dart';
 import 'package:netflix_clone/presentation/new_and_hot/widgets/everyones_watching_widget.dart';
 
-
 class ScreenNewAndHot extends StatelessWidget {
   const ScreenNewAndHot({super.key});
 
@@ -76,6 +75,9 @@ class ScreenNewAndHot extends StatelessWidget {
   }
 
   Widget _buildEveryonesWatching() {
-    return ListView.builder(itemCount: 10,itemBuilder: (BuildContext context, index) => const EveryonesWatchingWidget());
+    return ListView.builder(
+        itemCount: 10,
+        itemBuilder: (BuildContext context, index) =>
+            const EveryonesWatchingWidget());
   }
 }

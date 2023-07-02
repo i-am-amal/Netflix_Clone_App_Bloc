@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/core/constants.dart';
@@ -39,12 +38,12 @@ class ComingSoonWidget extends StatelessWidget {
         SizedBox(
           width: size.width - 50,
           height: 450,
-          child:const Column(
+          child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               VideoWidget(),
               kHeight,
-               Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -68,14 +67,14 @@ class ComingSoonWidget extends StatelessWidget {
                   )
                 ],
               ),
-               Text("Coming on Friday"),
+              Text("Coming on Friday"),
               kHeight,
-               Text(
+              Text(
                 "Tall Girl 2",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
               ),
               kHeight,
-               Text(
+              Text(
                 " Landing the lead in the school musical is a dream come true for jodi. until the pressure sends her confidence — and her relationship —into a tailspin. ",
                 style: TextStyle(color: Colors.grey),
               ),
@@ -86,4 +85,3 @@ class ComingSoonWidget extends StatelessWidget {
     );
   }
 }
-

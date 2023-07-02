@@ -31,7 +31,7 @@ class VideoListitem extends StatelessWidget {
                       color: kWhiteColor,
                       size: 30,
                     ),
-                  ), 
+                  ),
                 ),
 
                 //right side

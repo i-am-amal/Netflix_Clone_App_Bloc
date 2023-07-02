@@ -1,13 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix_clone/application/search/search_bloc.dart';
 import 'package:netflix_clone/core/constants.dart';
+import 'package:netflix_clone/domain/core/debounce/search_debounce.dart';
+import 'package:netflix_clone/presentation/search/widgets/search_idle.dart';
 import 'package:netflix_clone/presentation/search/widgets/search_result.dart';
 
 class ScreenSearch extends StatelessWidget {
-  const ScreenSearch({super.key});
+  ScreenSearch({super.key});
+  final debounce = Debouncer(milliseconds: 1 * 1000);
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<SearchBloc>(context).add(const Initialize());
+    });
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -29,7 +38,18 @@ class ScreenSearch extends StatelessWidget {
               ),
               kHeight,
               // const Expanded(child: SearchIdleWidget())
-              const Expanded(child: SearchResultWidget())
+              Expanded(
+                child: BlocBuilder<SearchBloc, SearchState>(
+                  builder: (context, state) {
+                    if (state.searchResultList.isEmpty) {
+                      return const SearchIdleWidget();
+                      // return const SearchResultWidget();
+                    } else {
+                      return const SearchResultWidget();
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),

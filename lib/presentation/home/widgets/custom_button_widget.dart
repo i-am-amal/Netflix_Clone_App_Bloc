@@ -7,9 +7,9 @@ class CustomButton extends StatelessWidget {
   final double iconsize;
   final double textSize;
   const CustomButton({
-     this.textSize=16,
+    this.textSize = 16,
     required this.icon,
-     this.iconsize=30,
+    this.iconsize = 30,
     required this.title,
     super.key,
   });
