@@ -4,20 +4,14 @@ import 'package:netflix_clone/core/colors/colors.dart';
 class VideoWidget extends StatelessWidget {
   const VideoWidget({
     super.key,
+    required this.imageUrl,
   });
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SizedBox(
-          height: 200,
-          width: double.infinity,
-          child: Image.network(
-            'https://www.themoviedb.org/t/p/w533_and_h300_bestv2/PwI3EfasE9fVuXsmMu9ffJh0Re.jpg',
-            fit: BoxFit.cover,
-          ),
-        ),
         Positioned(
           right: 10,
           bottom: 10,
@@ -32,6 +26,31 @@ class VideoWidget extends StatelessWidget {
                 size: 20,
               ),
             ),
+          ),
+        ),
+        SizedBox(
+          width: double.infinity,
+          height: 200,
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return const Center(
+                child: Icon(
+                  Icons.wifi,
+                  color: Colors.white,
+                ),
+              );
+            },
           ),
         ),
       ],

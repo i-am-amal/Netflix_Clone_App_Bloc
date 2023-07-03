@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix_clone/application/home/home_bloc.dart';
+import 'package:netflix_clone/core/colors/colors.dart';
 // import 'package:flutter/services.dart';
 import 'package:netflix_clone/core/constants.dart';
 import 'package:netflix_clone/presentation/home/widgets/background_card.dart';
 import 'package:netflix_clone/presentation/home/widgets/number_title_card.dart';
+import 'package:netflix_clone/presentation/widgets/main_title.dart';
 import 'package:netflix_clone/presentation/widgets/main_title_card.dart';
 
 ValueNotifier<bool> scrollNotifier = ValueNotifier(true);
@@ -17,6 +21,11 @@ class ScreenHome extends StatelessWidget {
     //  return AnnotatedRegion<SystemUiOverlayStyle>(
     //   value: SystemUiOverlayStyle.light,
     //--------------------------------------------
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<HomeBloc>(context).add(const GetHomeScreenData());
+    });
+
     return Scaffold(
       body: ValueListenableBuilder(
           valueListenable: scrollNotifier,
@@ -24,7 +33,6 @@ class ScreenHome extends StatelessWidget {
             return NotificationListener<UserScrollNotification>(
               onNotification: (notification) {
                 final ScrollDirection direction = notification.direction;
-                print(direction);
                 if (direction == ScrollDirection.reverse) {
                   scrollNotifier.value = false;
                 } else if (direction == ScrollDirection.forward) {
@@ -35,20 +43,76 @@ class ScreenHome extends StatelessWidget {
               },
               child: Stack(
                 children: [
-                  ListView(
-                    children: const [
-                      BackgroundCard(),
-                      MainTitleCard(title: "Released in the past year"),
-                      kHeight,
-                      MainTitleCard(title: "Trending Now"),
-                      kHeight,
-                      NumberTitleCard(),
-                      kHeight,
-                      MainTitleCard(title: "Tense Dramas"),
-                      kHeight,
-                      MainTitleCard(title: "South Indian Cinema"),
-                      kHeight,
-                    ],
+                  BlocBuilder<HomeBloc, HomeState>(
+                    builder: (context, state) {
+                      if (state.isLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state.hasError) {
+                        return const Center(
+                          child: Text(
+                            "Error while getting data",
+                            style: TextStyle(color: kWhiteColor),
+                          ),
+                        );
+                      }
+
+                      //released past year
+                      final releasesPastYear = state.pastYearMovieList.map((m) {
+                        return "$imageAppendUrl${m.posterPath}";
+                      }).toList();
+
+                      //trending
+                      final trending = state.trendingMovieslist.map((m) {
+                        return "$imageAppendUrl${m.posterPath}";
+                      }).toList();
+                      //tensed dramas
+                      final dramas = state.tenseDramasMovieList.map((m) {
+                        return "$imageAppendUrl${m.posterPath}";
+                      }).toList();
+                      //south indian moviess
+                      final southIndian = state.southIndianMovieList.map((m) {
+                        return "$imageAppendUrl${m.posterPath}";
+                      }).toList();
+                      //top 10 tv shows
+                      final top10 = state.trendingTvList.map((m) {
+                        return "$imageAppendUrl${m.posterPath}";
+                      }).toList();
+
+                      return ListView(
+                        children: [
+                          const BackgroundCard(),
+                          MainTitleCard(
+                            title: "Released in the past year",
+                            posterList: releasesPastYear,
+                          ),
+                          kHeight,
+                          MainTitleCard(
+                            title: "Trending Now",
+                            posterList: trending,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: MainTitle(
+                                title: "Top 10 TV Shows In India Today"),
+                          ),
+                          kHeight,
+                          NumberTitleCard(postersList: top10),
+                          kHeight,
+                          MainTitleCard(
+                            title: "Tense Dramas",
+                            posterList: dramas,
+                          ),
+                          kHeight,
+                          MainTitleCard(
+                            title: "South Indian Cinema",
+                            posterList: southIndian,
+                          ),
+                          kHeight,
+                        ],
+                      );
+                    },
                   ),
                   scrollNotifier.value == true
                       ? AnimatedContainer(
@@ -56,36 +120,36 @@ class ScreenHome extends StatelessWidget {
                           width: double.infinity,
                           height: 90,
                           color: Colors.black.withOpacity(0.2),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Image.network(
-                                      'https://pngimg.com/uploads/netflix/netflix_PNG15.png',
-                                      width: 25,
-                                      height: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Image.network(
+                                        'https://pngimg.com/uploads/netflix/netflix_PNG15.png',
+                                        width: 25,
+                                        height: 40,
+                                      ),
                                     ),
-                                  ),
-                                  const Spacer(),
-                                  const Icon(
-                                    Icons.cast,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                  kWidth,
-                                  Container(
-                                    width: 25,
-                                    height: 25,
-                                    color: Colors.blue,
-                                  ),
-                                  kWidth
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Row(
+                                    const Spacer(),
+                                    const Icon(
+                                      Icons.cast,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                    kWidth,
+                                    Container(
+                                      width: 25,
+                                      height: 25,
+                                      color: Colors.blue,
+                                    ),
+                                    kWidth
+                                  ],
+                                ),
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
@@ -96,9 +160,9 @@ class ScreenHome extends StatelessWidget {
                                     Text("Movies", style: kHomeTitleText),
                                     Text("Categories", style: kHomeTitleText)
                                   ],
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
                         )
                       : kHeight,

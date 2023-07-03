@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix_clone/application/hot_and_new/hot_and_new_bloc.dart';
 import 'package:netflix_clone/core/colors/colors.dart';
 import 'package:netflix_clone/core/constants.dart';
 import 'package:netflix_clone/presentation/new_and_hot/widgets/coming_soon_widget.dart';
@@ -6,6 +9,7 @@ import 'package:netflix_clone/presentation/new_and_hot/widgets/everyones_watchin
 
 class ScreenNewAndHot extends StatelessWidget {
   const ScreenNewAndHot({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,7 @@ class ScreenNewAndHot extends StatelessWidget {
                 fontWeight: FontWeight.w900,
               ),
             ),
+            
             actions: [
               const Icon(
                 Icons.cast,
@@ -57,27 +62,165 @@ class ScreenNewAndHot extends StatelessWidget {
             ),
           ),
         ),
-        body: TabBarView(
+
+
+        body:const TabBarView(
           children: [
-            _buildComingSoon(),
-            _buildEveryonesWatching(),
+
+
+
+  ComingSoonList(
+            key: Key("coming_soon"),
+          ),
+          EveryoneIsWatching(
+            key: Key("everyone_is_watching"),
+
+
+
+          )
           ],
         ),
       ),
     );
   }
 
-  Widget _buildComingSoon() {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (BuildContext context, index) => const ComingSoonWidget(),
+  
+}
+
+
+
+class ComingSoonList extends StatelessWidget {
+  const ComingSoonList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        BlocProvider.of<HotAndNewBloc>(context)
+            .add(const LoadDataInComingSoon());
+      },
+    );
+    return RefreshIndicator(
+      onRefresh: () async {
+        BlocProvider.of<HotAndNewBloc>(context)
+            .add(const LoadDataInComingSoon());
+      },
+      child: BlocBuilder<HotAndNewBloc, HotAndNewState>(
+        builder: (context, state) {
+
+          if (state.isLoading) {
+
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state.isError) {
+            return const Center(
+              child: Text(
+                'error while loading list',
+                style: TextStyle(color: kWhiteColor),
+              ),
+            );
+          } else if (state.comigingSoonList.isEmpty) {
+
+            return const Center(
+              child: Text(
+                'List is empty',
+                style: TextStyle(color: kWhiteColor),
+              ),
+            );
+          } else {
+
+            return ListView.builder(
+              itemCount: state.comigingSoonList.length,
+              itemBuilder: (context, index) {
+                final movie = state.comigingSoonList[index];
+                if (movie.id == null) {
+                  return const SizedBox();
+                }
+                String month = '';
+                String day = '';
+                try {
+                  final date = DateTime.parse(movie.releaseDate!);
+                  final formatedDate = DateFormat.yMMMd('en_US').format(date);
+                  month = formatedDate
+                      .split(' ')
+                      .first
+                      .substring(0, 3)
+                      .toUpperCase();
+                  day = movie.releaseDate!.split('-')[1];
+                } catch (_) {
+                  month = '';
+                  day = '';
+                }
+
+                return ComingSoonWidget(
+                    id: movie.id!.toString(),
+                    month: month,
+                    day: day,
+                    posterpath: "$imageAppendUrl${movie.posterPath}",
+                    movieName: movie.originalTitle ?? "no title",
+                    description: movie.overview ?? "no description");
+              },
+            );
+          }
+        },
+      ),
     );
   }
+}
 
-  Widget _buildEveryonesWatching() {
-    return ListView.builder(
-        itemCount: 10,
-        itemBuilder: (BuildContext context, index) =>
-            const EveryonesWatchingWidget());
+class EveryoneIsWatching extends StatelessWidget {
+  const EveryoneIsWatching({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        BlocProvider.of<HotAndNewBloc>(context)
+            .add(const LoadDataEveryonesWatching());
+      },
+    );
+    return RefreshIndicator(
+      onRefresh: () async {
+        BlocProvider.of<HotAndNewBloc>(context)
+            .add(const LoadDataEveryonesWatching());
+      },
+      child: BlocBuilder<HotAndNewBloc, HotAndNewState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state.isError) {
+            return const Center(
+              child: Text(
+                'error while loading list',
+                style: TextStyle(color: kWhiteColor),
+              ),
+            );
+          } else if (state.everyoneIsWatchingList.isEmpty) {
+            return const Center(
+              child: Text(
+                'List is empty',
+                style: TextStyle(color: kWhiteColor),
+              ),
+            );
+          } else {
+            return ListView.builder(
+              padding: const EdgeInsets.all( 16),
+              itemCount: state.everyoneIsWatchingList.length,
+              itemBuilder: (context, index) {
+                final tv = state.everyoneIsWatchingList[index];
+
+                return EveryonesWatchingWidget(
+                    posterpath: "$imageAppendUrl${tv.posterPath}",
+                    movieName: tv.originalName ?? "no name",
+                    description: tv.overview ?? "no descriptopn");
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 }

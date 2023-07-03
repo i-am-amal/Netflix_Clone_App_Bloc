@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:netflix_clone/core/constants.dart';
 
 class MainCardWidget extends StatelessWidget {
-  const MainCardWidget({
+  const MainCardWidget({required this.imageUrl,
     super.key,
   });
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +16,9 @@ class MainCardWidget extends StatelessWidget {
       // color: Colors.white,
       decoration: BoxDecoration(
         borderRadius: kRadius20,
-        image: const DecorationImage(
-          image: NetworkImage(
-              "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg"),
+        image:  DecorationImage(
+          image: NetworkImage(imageUrl
+              ),
         ),
       ),
     );

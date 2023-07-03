@@ -4,29 +4,39 @@ import 'package:netflix_clone/presentation/home/widgets/custom_button_widget.dar
 import 'package:netflix_clone/presentation/widgets/video_widget.dart';
 
 class EveryonesWatchingWidget extends StatelessWidget {
-  const EveryonesWatchingWidget({
-    super.key,
+ const EveryonesWatchingWidget({
+    super.key, required this.posterpath, required this.movieName, required this.description,
   });
+  final String posterpath;
+  final String movieName;
+  final String description;
+
+
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         kHeight,
         Text(
-          "Friends",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+         movieName,
+          style:const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
         kHeight,
         Text(
-          " This hit sitcom follows the merry misadventures of six 20-something pals as they navigate the pitfalls of life and love in 1990s Manhattan. ",
+          description,
+          maxLines: 4,
+
           style: TextStyle(color: Colors.grey),
         ),
         kHeight50,
-        VideoWidget(),
+
+        VideoWidget(imageUrl: posterpath),
         kHeight,
-        Row(
+      const  Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             CustomButton(

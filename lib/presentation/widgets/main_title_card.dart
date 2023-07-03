@@ -5,27 +5,41 @@ import 'package:netflix_clone/presentation/widgets/main_title.dart';
 
 class MainTitleCard extends StatelessWidget {
   final String title;
+  final List<String> posterList;
+
   const MainTitleCard({
     required this.title,
+    required this.posterList,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        MainTitle(title: title),
-        kHeight,
-        LimitedBox(
-          maxHeight: 200,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: List.generate(10, (index) => const MainCardWidget()),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: MainTitle(title: title),
           ),
-        ),
-        kHeight,
-      ],
+          kHeight,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: LimitedBox(
+              maxHeight: 200,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: List.generate(
+                  posterList.length,
+                  (index) => MainCardWidget(imageUrl: posterList[index]),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

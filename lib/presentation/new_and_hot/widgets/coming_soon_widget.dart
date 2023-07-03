@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/core/colors/colors.dart';
 import 'package:netflix_clone/core/constants.dart';
 import 'package:netflix_clone/presentation/home/widgets/custom_button_widget.dart';
 import 'package:netflix_clone/presentation/widgets/video_widget.dart';
@@ -7,7 +8,19 @@ import 'package:netflix_clone/presentation/widgets/video_widget.dart';
 class ComingSoonWidget extends StatelessWidget {
   const ComingSoonWidget({
     super.key,
+    required this.id,
+    required this.month,
+    required this.day,
+    required this.posterpath,
+    required this.movieName,
+    required this.description,
   });
+  final String id;
+  final String month;
+  final String day;
+  final String posterpath;
+  final String movieName;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +28,19 @@ class ComingSoonWidget extends StatelessWidget {
 
     return Row(
       children: [
-        const SizedBox(
+        SizedBox(
           width: 50,
           height: 450,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "FEB",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                month,
+                style:const TextStyle(fontSize: 16, color: Colors.grey),
               ),
               Text(
-                "11",
-                style: TextStyle(
+                day,
+                style:const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 4),
@@ -38,19 +51,22 @@ class ComingSoonWidget extends StatelessWidget {
         SizedBox(
           width: size.width - 50,
           height: 450,
-          child: const Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              VideoWidget(),
+              VideoWidget(imageUrl: posterpath),
               kHeight,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "TALL GIRL 2",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      movieName,
+                      style: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  Row(
+                  const Row(
                     children: [
                       CustomButton(
                           icon: CupertinoIcons.bell_solid,
@@ -67,20 +83,31 @@ class ComingSoonWidget extends StatelessWidget {
                   )
                 ],
               ),
-              Text("Coming on Friday"),
-              kHeight,
               Text(
-                "Tall Girl 2",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                "Coming on $day $month",
+                style: const TextStyle(color: Colors.grey),
               ),
               kHeight,
               Text(
-                " Landing the lead in the school musical is a dream come true for jodi. until the pressure sends her confidence — and her relationship —into a tailspin. ",
-                style: TextStyle(color: Colors.grey),
+                movieName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: kWhiteColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
+              ),
+              kHeight,
+              Text(
+                description,
+                maxLines: 4,
+                style: const TextStyle(
+                  color: kWhiteColor,
+                ),
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
