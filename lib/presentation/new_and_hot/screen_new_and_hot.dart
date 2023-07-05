@@ -10,7 +10,6 @@ import 'package:netflix_clone/presentation/new_and_hot/widgets/everyones_watchin
 class ScreenNewAndHot extends StatelessWidget {
   const ScreenNewAndHot({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -26,7 +25,6 @@ class ScreenNewAndHot extends StatelessWidget {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            
             actions: [
               const Icon(
                 Icons.cast,
@@ -34,10 +32,17 @@ class ScreenNewAndHot extends StatelessWidget {
                 size: 30,
               ),
               kWidth,
-              Container(
-                width: 25,
-                height: 25,
-                color: Colors.blue,
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 14),
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
               ),
               kWidth
             ],
@@ -62,32 +67,20 @@ class ScreenNewAndHot extends StatelessWidget {
             ),
           ),
         ),
-
-
-        body:const TabBarView(
+        body: const TabBarView(
           children: [
-
-
-
-  ComingSoonList(
-            key: Key("coming_soon"),
-          ),
-          EveryoneIsWatching(
-            key: Key("everyone_is_watching"),
-
-
-
-          )
+            ComingSoonList(
+              key: Key("coming_soon"),
+            ),
+            EveryoneIsWatching(
+              key: Key("everyone_is_watching"),
+            )
           ],
         ),
       ),
     );
   }
-
-  
 }
-
-
 
 class ComingSoonList extends StatelessWidget {
   const ComingSoonList({super.key});
@@ -107,9 +100,7 @@ class ComingSoonList extends StatelessWidget {
       },
       child: BlocBuilder<HotAndNewBloc, HotAndNewState>(
         builder: (context, state) {
-
           if (state.isLoading) {
-
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -121,7 +112,6 @@ class ComingSoonList extends StatelessWidget {
               ),
             );
           } else if (state.comigingSoonList.isEmpty) {
-
             return const Center(
               child: Text(
                 'List is empty',
@@ -129,7 +119,6 @@ class ComingSoonList extends StatelessWidget {
               ),
             );
           } else {
-
             return ListView.builder(
               itemCount: state.comigingSoonList.length,
               itemBuilder: (context, index) {
@@ -207,7 +196,7 @@ class EveryoneIsWatching extends StatelessWidget {
             );
           } else {
             return ListView.builder(
-              padding: const EdgeInsets.all( 16),
+              padding: const EdgeInsets.all(16),
               itemCount: state.everyoneIsWatchingList.length,
               itemBuilder: (context, index) {
                 final tv = state.everyoneIsWatchingList[index];
